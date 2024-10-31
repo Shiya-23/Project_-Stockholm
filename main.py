@@ -1,8 +1,8 @@
 import requests
 import csv
 
-# Your GitHub token
-token = "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"  # Replace with your actual token
+
+token = "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"  
 headers = {"Authorization": f"token {token}"}
 url = "https://api.github.com/search/users?q=location:Stockholm+followers:>100"
 
@@ -15,7 +15,7 @@ def fetch_users():
         response = requests.get(f"{url}&page={page}", headers=headers)
         data = response.json()
 
-        # Debugging: Print the data returned from the API
+       
         print(f"User data (page {page}): {data}")
 
         if "items" not in data or len(data["items"]) == 0:
@@ -42,9 +42,8 @@ def process_and_save_users(users):
 
         for user in users:
             user_details = get_user_details(user["login"])
-            print(user_details)  # Debugging: Check user details
-
-            # Clean up the company name
+            print(user_details) 
+            
             company = user_details.get("company", "")
             if company:
                 company = company.strip().lstrip("@").upper()
@@ -72,12 +71,12 @@ def fetch_and_save_repositories(users):
         response = requests.get(repos_url, headers=headers)
         repos = response.json()
 
-        # Debugging: Print the repos data for each user
+       
         print(f"Repos for {user['login']}: {repos}")
 
-        # Check if repos is a list
+       
         if isinstance(repos, list):
-            for repo in repos[:500]:  # Limit to 500 most recent repos
+            for repo in repos[:500]: 
                 repos_data.append({
                     "login": user["login"],
                     "full_name": repo.get("full_name", ""),
@@ -92,7 +91,7 @@ def fetch_and_save_repositories(users):
         else:
             print(f"Unexpected response for {user['login']}: {repos}")
 
-    # Save repos_data to CSV
+   
     with open("repositories.csv", mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(
@@ -114,6 +113,6 @@ def fetch_and_save_repositories(users):
 
 
 if __name__ == "__main__":
-    users = fetch_users()  # Fetch users from GitHub
-    process_and_save_users(users)  # Save user data to users.csv
-    fetch_and_save_repositories(users)  # Save repositories to repositories.csv
+    users = fetch_users()  
+    process_and_save_users(users)  
+    fetch_and_save_repositories(users)  
